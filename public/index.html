@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AstroHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
+      color: #c084fc; /* Light purple */
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Sidebar nav */
+    nav {
+      width: 80px;
+      background: rgba(20, 0, 40, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0;
+      box-shadow: 0 0 15px #6b21a8;
+      z-index: 10;
+    }
+
+    nav a {
+      color: #c084fc;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 1.5rem 0;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #a855f7;
+      transform: scale(1.2);
+    }
+
+    /* Main content */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #a855f7, 0 0 20px #c084fc;
+    }
+
+    main h2, main p {
+      text-shadow: 0 0 10px #a855f7, 0 0 20px #c084fc;
+    }
+
+    .typing {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      text-shadow: 0 0 10px #a855f7, 0 0 20px #c084fc;
+    }
+
+    #typewriter {
+      border-right: 2px solid #c084fc;
+      padding-right: 4px;
+      margin-left: 2px;
+      display: inline;
+      animation: blink-cursor 0.7s step-end infinite;
+    }
+
+    @keyframes blink-cursor {
+      from, to { border-color: transparent; }
+      50% { border-color: #c084fc; }
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 1rem 2rem;
+      color: #c084fc;
+      border: 2px solid #c084fc;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #a855f7, 0 0 20px #c084fc;
+    }
+
+    .btn:hover {
+      background-color: #c084fc;
+      color: #000;
+      box-shadow: 0 0 20px #c084fc, 0 0 40px #a855f7;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: #888;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* Stars */
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background: #c084fc;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: moveStars linear infinite;
+    }
+
+    @keyframes moveStars {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-1000px); }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="g.html" title="Games"><i class="fas fa-gamepad"></i></a>
+    <a href="~.html" title="Settings"><i class="fas fa-cog"></i></a>
+    <a href="https://discord.gg/yourinvite" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+  </nav>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="content">
+    <header>🌌 Welcome to AstroHub 🌌</header>
+
+    <main>
+      <h2>Explore the Cosmos</h2>
+      <p>Travel through the stars right from your browser.</p>
+      <p>Enjoy the cosmic animations and space-themed design.</p>
+      <p class="typing">A <span id="typewriter"></span> experience</p>
+      <a href="g.html" class="btn">Get Started</a>
+    </main>
+
+    <footer>
+      &copy; 2025 AstroHub. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    // Generate stars
+    const starsContainer = document.getElementById('stars');
+    const numStars = 100;
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * window.innerHeight}px`;
+      star.style.left = `${Math.random() * window.innerWidth}px`;
+      star.style.animationDuration = `${Math.random() * 20 + 10}s`;
+      starsContainer.appendChild(star);
+    }
+
+    // Typewriter
+    const words = ["Freedom", "Modern", "Fun", "Unblocked", "Exciting"];
+    let i = 0, j = 0, currentWord = '', isDeleting = false;
+    const speed = 150, pause = 1000;
+    const typewriter = document.getElementById('typewriter');
+
+    function type() {
+      const word = words[i];
+      if (isDeleting) {
+        currentWord = word.substring(0, j--);
+      } else {
+        currentWord = word.substring(0, j++);
+      }
+      typewriter.textContent = currentWord;
+      if (!isDeleting && j === word.length + 1) {
+        isDeleting = true;
+        setTimeout(type, pause);
+      } else if (isDeleting && j === -1) {
+        isDeleting = false;
+        i = (i + 1) % words.length;
+        setTimeout(type, 500);
+      } else {
+        setTimeout(type, speed);
+      }
+    }
+    type();
+  </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroHub - Games</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1a001f 0%, #000 100%);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: #e0d4ff;
+        }
+
+        canvas#particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        header {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #a855f7, 0 0 20px #c084fc;
+            color: #e0d4ff;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        nav a {
+            color: #c084fc;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+            text-shadow: 0 0 5px #a855f7, 0 0 15px #c084fc;
+        }
+
+        .game-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            flex-direction: column;
+        }
+
+        iframe {
+            width: 80%;
+            height: 80%;
+            border: 2px solid #a855f7;
+            border-radius: 8px;
+            box-shadow: 0 0 20px #9b5de5, 0 0 40px #a855f7;
+            background: #000;
+            transition: 0.3s;
+        }
+
+        iframe:fullscreen, iframe:-webkit-full-screen {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0;
+        }
+
+        .btn-fullscreen {
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            color: #e0d4ff;
+            border: 2px solid #a855f7;
+            font-weight: bold;
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            text-shadow: 0 0 5px #c084fc;
+            transition: 0.3s;
+        }
+
+        .btn-fullscreen:hover {
+            background-color: #a855f7;
+            color: #000;
+            box-shadow: 0 0 20px #9b5de5, 0 0 40px #c084fc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0.5rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+    <header>
+        🌌 AstroHub - Space Adventure 🌌
+    </header>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="g.html">Games</a>
+        <a href="/about">About</a>
+    </nav>
+
+    <div class="game-container">
+        <iframe id="gameFrame" src="https://truffled.lol/games/10minutestilldawn/index.html" title="10 Minutes Till Dawn" allowfullscreen></iframe>
+        <button class="btn-fullscreen" onclick="goFullscreen()">Go Fullscreen</button>
+    </div>
+
+    <footer>
+        &copy; 2025 AstroHub. All rights reserved.
+    </footer>
+
+    <script>
+        const iframe = document.getElementById('gameFrame');
+
+        function goFullscreen() {
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+        }
+
+        // Particle animation
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.alpha = Math.random();
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(168, 85, 247, ${this.alpha})`; /* purple */
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 120; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
